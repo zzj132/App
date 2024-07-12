@@ -148,7 +148,7 @@
 	}
 		
 	function notify(){
-		console.log("获取监听方法启动")
+		
 		uni.notifyBLECharacteristicValueChange({
 			deviceId:bleDeviceid,
 			serviceId:bleServiceid,
