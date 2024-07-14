@@ -42,15 +42,15 @@
 	
 	const blueDeviceList=ref([])
 	const bleDeviceid=ref('')
-	const bleServiceid=ref('')
-	const bleCharacteristicId=ref('')
+	const bleServiceid=ref('0000FFE0-0000-1000-8000-00805F9B34FB')
+	const bleCharacteristicId=ref('0000FFE1-0000-1000-8000-00805F9B34FB')
 	const code=ref('')
 	
 	//监测连接状态
 	function getConnectionState(){
 		uni.onBLEConnectionStateChange(res=>{
 			if(res.connected){
-				console.log(res.deviceId,":正常连接")
+				console.log(res.deviceId,":蓝牙设备连接正常")
 			}else{
 				console.log("蓝牙连接断开")
 			}
@@ -61,12 +61,10 @@
 	function initBlue() {
 	    uni.openBluetoothAdapter({
 	        success(res) {
-	            console.log('初始化蓝牙成功')
-	            console.log(res)
+	            console.log(res,'初始化蓝牙成功')
 	        },
 	        fail(err) {
-	            console.log('初始化蓝牙失败')
-	            console.error(err)
+	            console.log(err,'初始化蓝牙失败')
 	        }
 	    })
 	}
@@ -76,13 +74,12 @@
 	function discovery() {
 	    uni.startBluetoothDevicesDiscovery({
 	        success(res) {
-	            console.log('开始搜索')
+	            console.log(res,'开始搜索附近蓝牙设备')
 	            // 开启监听回调
 	            uni.onBluetoothDeviceFound(found)
 	        },
 	        fail(err) {
-	            console.log('搜索失败')
-	            console.error(err)
+	            console.log(err,'蓝牙设备搜索失败')
 	        }
 	    })
 	}
@@ -101,23 +98,14 @@
 		uni.createBLEConnection({
 			deviceId:bleDeviceid.value,
 			success(res){
-				console.log(res)
-				console.log("连接成功")
+				console.log(res,"蓝牙连接成功")
 			// 停止搜索
-	            stopDiscovery()
-			//获取服务
-				getService()
-			//获取特征值
-				getCharacteristics()
-				
+	            stopDiscovery()			
 			//开启监听
 				notify()
-				
-				console.log("方法调用了吗？")
 	        },
 	        fail(err) {
-	            console.log('连接失败')
-	            console.error(err)
+	            console.log(err,'蓝牙连接失败')
 	        }
 	    })
 		}
@@ -126,15 +114,15 @@
 	function stopDiscovery(){
 		uni.stopBluetoothDevicesDiscovery({
 				success(res){
-					console.log("关闭成功")
-					console.log(res)
+					console.log(res,"扫描关闭成功")
 				},
 				fail(err){
-					console.log("关闭失败")
-					console.log(err)
+					console.log(err,"扫描关闭失败")
 				}
 			}
 		)}
+	/*
+	待用
 	
 	//获取服务
 	function getService(){
@@ -152,7 +140,7 @@
 			}
 		})
 	}
-	
+	/*
 	//获取特征值
 	function getCharacteristics(){
 		console.log("获取特征值方法启动")
@@ -173,6 +161,7 @@
 			}
 		})
 	}
+	*/
 	
 	
 	//开启监听
@@ -183,13 +172,10 @@
 			serviceId:bleServiceid.value,
 			characteristicId:bleCharacteristicId.value,
 			 success(res){
-				 console.log("监听成功")
-				 console.log(res)
-				 listenValueChange()
+				 console.log(res,"特征值监听开启")
 			 },
 			fail(err){
-				console.log('监听失败')
-				console.log(err)
+				console.log(err,'特征值监听失败')
 			}
 		
 		})
@@ -200,22 +186,22 @@
 	    // 向蓝牙设备发送一个0x00的16进制数据
 	    const buffer = new ArrayBuffer(code.length)
 	    const dataView = new DataView(buffer)
-	    // dataView.setUint8(0, 0)
+	    
 	    
 	    for (var i = 0; i < code.length; i++) {
 	      dataView.setUint8(i, code.charAt(i).charCodeAt())
 	    }
 	    
 	    uni.writeBLECharacteristicValue({
-	      deviceId: bleDeviceid.value, // 设备ID，在【4】里获取到
-	      serviceId: bleServiceid.value, // 服务UUID，在【6】里能获取到
-	      characteristicId: bleCharacteristicId.value, // 特征值，在【7】里能获取到
+	      deviceId: bleDeviceid.value, 
+	      serviceId: bleServiceid.value,
+	      characteristicId: bleCharacteristicId.value, 
 	      value: buffer,
 	      success(res) {
-	        console.log(res)
+	        console.log(res,'数据发送成功')
 	      },
 	      fail(err) {
-	        console.error(err)
+	        console.error(err,'数据发送异常')
 	      }
 	    })
 	}
