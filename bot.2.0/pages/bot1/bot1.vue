@@ -7,7 +7,6 @@
 	<view class="box3" hover-class="box3Hover"hover-stay-time="0">允许</view>
 	
 	
-
 </template>
 
 <script>
