@@ -222,6 +222,11 @@
     box-sizing: border-box;
     padding: 10rpx;
     border-bottom: 1px solid #ccc;
+	
+}
+.item:active {
+    background-color: #3e8e41;
+    transform: translateY(4px);
 }
 /* 基础按钮样式 */
 .button {
